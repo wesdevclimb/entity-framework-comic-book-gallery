@@ -38,6 +38,16 @@ namespace ComicBookGalleryModel
                     Name = "Steve Ditko"
                 };
 
+                var role1 = new Role()
+                {
+                    Name = "Script"
+                };
+
+                var role2 = new Role()
+                {
+                    Name = "Pencils"
+                };
+
                 var comicBook1 = new ComicBook()
                 {
                     Series = series1,
@@ -45,8 +55,8 @@ namespace ComicBookGalleryModel
                     PublishedOn = DateTime.Today
                 };
 
-                comicBook1.Artists.Add(stanLee);
-                comicBook1.Artists.Add(jackKirby);
+                comicBook1.AddArtist(stanLee, role1);
+                comicBook1.AddArtist(jackKirby, role2);
 
                 var comicBook2 = new ComicBook()
                 {
@@ -55,8 +65,8 @@ namespace ComicBookGalleryModel
                     PublishedOn = DateTime.Today
                 };
 
-                comicBook2.Artists.Add(stanLee);
-                comicBook2.Artists.Add(jackKirby);
+                comicBook2.AddArtist(stanLee, role1);
+                comicBook2.AddArtist(jackKirby, role2);
 
 
                 var comicBook3 = new ComicBook()
@@ -66,8 +76,8 @@ namespace ComicBookGalleryModel
                     PublishedOn = DateTime.Today
                 };
 
-                comicBook3.Artists.Add(stanLee);
-                comicBook3.Artists.Add(steveDitko);
+                comicBook3.AddArtist(stanLee, role1);
+                comicBook3.AddArtist(steveDitko, role2);
 
                 context.ComicBooks.Add(comicBook1);
                 context.ComicBooks.Add(comicBook2);
@@ -76,16 +86,18 @@ namespace ComicBookGalleryModel
 
                 var comicBooks = context.ComicBooks
                     .Include(cb => cb.Series)
-                    .Include(cb => cb.Artists)
+                    .Include(cb => cb.Artists.Select(a => a.Artist))
+                    .Include(cb => cb.Artists.Select(a => a.Role))
                     .ToList();
                 foreach (var comicBook in comicBooks)
                 {
-                    var artistNames = comicBook.Artists.Select(a => a.Name).ToList();
-                    var artistsDisplayText = string.Join(", ", artistNames);
+                    var artistRoleNames = comicBook.Artists
+                        .Select(a => $"{a.Artist.Name} - {a.Role.Name}").ToList();
+                    var artistRolesDisplayText = string.Join(", ", artistRoleNames);
 
 
                     Console.WriteLine(comicBook.DisplayText);
-                    Console.WriteLine(artistsDisplayText);
+                    Console.WriteLine(artistRolesDisplayText);
                 }
 
                 Console.ReadLine();

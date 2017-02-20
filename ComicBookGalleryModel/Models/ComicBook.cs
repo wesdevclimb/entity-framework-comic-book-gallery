@@ -12,7 +12,7 @@ namespace ComicBookGalleryModel.Models
     {
         public ComicBook()
         {
-            Artists = new List<Artist>();
+            Artists = new List<ComicBookArtist>();
         }
 
         public int Id { get; set; }
@@ -22,9 +22,18 @@ namespace ComicBookGalleryModel.Models
         public DateTime PublishedOn { get; set; }
         public decimal? AverageRating { get; set; }
 
-        public ICollection<Artist> Artists { get; set; }
+        public ICollection<ComicBookArtist> Artists { get; set; }
         public Series Series { get; set; }
 
         public string DisplayText => $"{Series?.Title} #{IssueNumber}";
+
+        public void AddArtist(Artist artist, Role role)
+        {
+            Artists.Add(new ComicBookArtist()
+            {
+                Artist = artist,
+                Role = role
+            });
+        }
     }
 }
